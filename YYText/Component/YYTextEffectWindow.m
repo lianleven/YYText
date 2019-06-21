@@ -28,7 +28,7 @@
             return nil;
         }
         // iOS 11 compatible
-        if ( (mode.length == 21)&&
+        if ( mode.length == 21 &&
             [mode hasPrefix:@"kCF"] &&
             [mode hasSuffix:@"RunLoopDefaultMode"]) {
             return nil;
