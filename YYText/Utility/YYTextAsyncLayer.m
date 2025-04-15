@@ -130,7 +130,7 @@ static dispatch_queue_t YYTextAsyncLayerGetReleaseQueue() {
         if (task.willDisplay) task.willDisplay(self);
         _YYTextSentinel *sentinel = _sentinel;
         int32_t value = sentinel.value;
-        BOOL (^isCancelled)() = ^BOOL() {
+        BOOL (^isCancelled)(void) = ^BOOL() {
             return value != sentinel.value;
         };
         CGSize size = self.bounds.size;
@@ -198,6 +198,13 @@ static dispatch_queue_t YYTextAsyncLayerGetReleaseQueue() {
             });
         });
     } else {
+        CGSize size = self.bounds.size;
+        if (size.width < 1 || size.height < 1) {
+            if (task.willDisplay) task.willDisplay(self);
+            self.contents = nil;
+            if (task.didDisplay) task.didDisplay(self, YES);
+            return;
+        }
         [_sentinel increase];
         if (task.willDisplay) task.willDisplay(self);
         UIGraphicsBeginImageContextWithOptions(self.bounds.size, self.opaque, self.contentsScale);
